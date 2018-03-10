@@ -1,0 +1,86 @@
+latest tarball located at http://releases.ansible.com/ansible/ via the following command:
+Copy
+~]$ curl -o /tmp/ansible-latest.tar.gz http://releases.ansible.com/ansible/ansible-latest.tar.gz
+ % Total    % Received %...
+
+
+name: Add Some repo
+  yum_repository:
+    name: somerepo
+    description: Some YUM repo
+    baseurl: 192:168.30.2:/etc/yum.repos.d/epel.repo
+    gpgkey: 192.168.30.2:/etc/pki/rpm-gpg
+    gpgcheck: yes
+    params: "{{ my_role_somerepo_params }}"
+
+
+
+[root@ansible-master kernels]# rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+Retrieving http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+warning: /var/tmp/rpm-tmp.nGdwDC: Header V4 DSA/SHA1 Signature, key ID baadae52: NOKEY
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:elrepo-release-7.0-3.el7.elrepo  ################################# [100%]
+[root@ansible-master kernels]# yum --enablerepo=elrepo-kernel install kernel-ml-3.*
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+elrepo                                                                                                                                           | 2.9 kB  00:00:00
+elrepo-kernel                                                                                                                                    | 2.9 kB  00:00:00
+(1/2): elrepo/primary_db                                                                                                                         | 455 kB  00:00:08
+(2/2): elrepo-kernel/primary_db                                                                                                                  | 1.7 MB  00:00:12
+No package kernel-ml-3.* available.
+Error: Nothing to do
+[root@ansible-master kernels]# yum --enablerepo=elrepo-kernel install kernel
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+Package kernel-3.10.0-693.el7.x86_64 already installed and latest version
+Nothing to do
+[root@ansible-master kernels]# yum --enablerepo=elrepo-kernel install kernel-ml-4*
+Loaded plugins: langpacks, product-id, search-disabled-repos, subscription-manager
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+Resolving Dependencies
+--> Running transaction check
+---> Package kernel-ml.x86_64 0:4.13.12-1.el7.elrepo will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+========================================================================================================================================================================
+ Package                              Arch                              Version                                          Repository                                Size
+========================================================================================================================================================================
+Installing:
+ kernel-ml                            x86_64                            4.13.12-1.el7.elrepo                             elrepo-kernel                             42 M
+
+Transaction Summary
+========================================================================================================================================================================
+Install  1 Package
+
+Total download size: 42 M
+Installed size: 190 M
+Is this ok [y/d/N]: y
+Downloading packages:
+warning: /var/cache/yum/x86_64/7Server/elrepo-kernel/packages/kernel-ml-4.13.12-1.el7.elrepo.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID baadae52: NOKEY:00:00 ETA
+Public key for kernel-ml-4.13.12-1.el7.elrepo.x86_64.rpm is not installed
+kernel-ml-4.13.12-1.el7.elrepo.x86_64.rpm                                                                                                        |  42 MB  00:00:23
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-elrepo.org
+Importing GPG key 0xBAADAE52:
+ Userid     : "elrepo.org (RPM Signing Key for elrepo.org) <secure@elrepo.org>"
+ Fingerprint: 96c0 104f 6315 4731 1e0b b1ae 309b c305 baad ae52
+ Package    : elrepo-release-7.0-3.el7.elrepo.noarch (installed)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-elrepo.org
+Is this ok [y/N]: y
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Warning: RPMDB altered outside of yum.
+  Installing : kernel-ml-4.13.12-1.el7.elrepo.x86_64                                                                                                                1/1
+rhel-localftp.rep/productid                                                                                                                      | 1.6 kB  00:00:00
+  Verifying  : kernel-ml-4.13.12-1.el7.elrepo.x86_64                                                                                                                1/1
+
+Installed:
+  kernel-ml.x86_64 0:4.13.12-1.el7.elrepo
+
+Complete!
+[root@ansible-master kernels]# reboot
+
